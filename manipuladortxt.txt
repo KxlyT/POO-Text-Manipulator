@@ -1,0 +1,95 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class Main {
+    
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        while (true) {
+            System.out.println("Menu:");
+            System.out.println("1. Adicionar novo nome");
+            System.out.println("2. Mostrar todos os nomes");
+            System.out.println("3. Remover todos os nomes");
+            System.out.println("4. Sair");
+            System.out.print("Escolha uma opcao: ");
+            
+            int escolha = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch (escolha) {
+                case 1:
+                    System.out.print("Digite o nome a ser adicionado: ");
+                    String nome = scanner.nextLine();
+                    ArquivoManipulador.adicionarNome(nome);
+                    break;
+                case 2:
+                    ArquivoManipulador.mostrarNomes();
+                    break;
+                case 3:
+                    ArquivoManipulador.removerArquivo();
+                    break;
+                case 4:
+                    System.out.println("Encerrando...");
+                    scanner.close();
+                    System.exit(0);
+                default:
+                    System.out.println("Opcao invalida. Tente novamente.");
+            }
+        }
+    }
+}
+
+class ArquivoManipulador {
+    
+    public static void adicionarNome(String nome) {
+        try {
+            File arquivo = new File("dados.txt");
+            if (!arquivo.exists()) {
+                arquivo.createNewFile();
+            }
+            FileWriter escritor = new FileWriter(arquivo, true);
+            escritor.write(nome + "\n");
+            escritor.close();
+            System.out.println("Nome adicionado com sucesso!");
+        } catch (IOException e) {
+            System.out.println("Erro ao adicionar nome ao arquivo: " + e.getMessage());
+        }
+    }
+    
+    public static void mostrarNomes() {
+        try {
+            File arquivo = new File("dados.txt");
+            if (!arquivo.exists()) {
+                System.out.println("O arquivo nao existe.");
+                return;
+            }
+            Scanner leitor = new Scanner(arquivo);
+            while (leitor.hasNextLine()) {
+                System.out.println(leitor.nextLine());
+            }
+            leitor.close();
+        } catch (IOException e) {
+            System.out.println("Erro ao mostrar nomes do arquivo: " + e.getMessage());
+        }
+    }
+    
+    public static void removerArquivo() {
+        try {
+            File arquivo = new File("dados.txt");
+            if (!arquivo.exists()) {
+                System.out.println("O arquivo nao existe.");
+                return;
+            }
+            if (arquivo.delete()) {
+                System.out.println("Arquivo removido com sucesso!");
+            } else {
+                System.out.println("Erro ao remover o arquivo.");
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao remover o arquivo: " + e.getMessage());
+        }
+    }
+}
